@@ -1,16 +1,6 @@
-int flexSensorPin0 = A0; //analog pin 0
-int flexSensorPin1 = A1; //analog pin 1
-int flexSensorPin2 = A2; //analog pin 2
-int flexSensorPin3 = A3; //analog pin 3
+int flexSensorPin0 = A0, flexSensorPin1 = A1, flexSensorPin2 = A2, flexSensorPin3 = A3; 
 
-int base0 = 0;
-int base1 = 0;
-int base2 = 0;
-int base3 = 0;
-int upper0 = 0;
-int upper1 = 0;
-int upper2 = 0;
-int upper3 = 0;
+int base0 = 0, base1 = 0, base2 = 0, base3 = 0, upper0 = 0, upper1 = 0, upper2 = 0, upper3 = 0;
 
 void setup() {
   Serial.begin(9600);
@@ -48,11 +38,13 @@ void loop() {
     int flex2_0to100 = map(flexSensor2, base2, upper2, 0, 100);
     int flex3_0to100 = map(flexSensor3, base3, upper3, 0, 100);
 
-    Serial.println(flex0_0to100);
-    Serial.println(flex1_0to100);
-    Serial.println(flex2_0to100);
+    Serial.print(flex0_0to100);
+    Serial.print('\t');
+    Serial.print(flex1_0to100);
+    Serial.print('\t');
+    Serial.print(flex2_0to100);
+    Serial.print('\t');
     Serial.println(flex3_0to100);
-    Serial.println("end");
 
 
     //In my tests I was getting a reading on the arduino between 512, and 614.
