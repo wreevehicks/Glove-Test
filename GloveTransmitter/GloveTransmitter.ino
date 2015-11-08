@@ -8,7 +8,7 @@ XBee xbee = XBee();
 uint8_t payload[] = { 0, 0 };
 
 // SH + SL Address of receiving XBee
-XBeeAddress64 addr64 = XBeeAddress64(0x00000000, 0x0000FFFF);
+XBeeAddress64 addr64 = XBeeAddress64(0x0013a200, 0x4079b2e6);
 ZBTxRequest zbTx = ZBTxRequest(addr64, payload, sizeof(payload));
 ZBTxStatusResponse txStatus = ZBTxStatusResponse();
 
@@ -102,7 +102,7 @@ void loop() {
   xbee.send(zbTx);
 
   // flash TX indicator
-  flashLed(statusLed, 1, 100);
+  flashLed(statusLed, 1, 10);
 
   // after sending a tx request, we expect a status response
   // wait up to half second for the status response
@@ -116,10 +116,10 @@ void loop() {
       // get the delivery status, the fifth byte
       if (txStatus.getDeliveryStatus() == SUCCESS) {
         // success.  time to celebrate
-        flashLed(statusLed, 5, 50);
+        flashLed(statusLed, 5, 10);
       } else {
         // the remote XBee did not receive our packet. is it powered on?
-        flashLed(errorLed, 3, 500);
+        flashLed(errorLed, 3, 10);
       }
     }
   } else if (xbee.getResponse().isError()) {
@@ -127,10 +127,10 @@ void loop() {
     //nss.println(xbee.getResponse().getErrorCode());
   } else {
     // local XBee did not provide a timely TX Status Response -- should not happen
-    flashLed(errorLed, 2, 50);
+    flashLed(errorLed, 2, 10);
   }
 
-  delay(100);
+  delay(500);
 
 
 }

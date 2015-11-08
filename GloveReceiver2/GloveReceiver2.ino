@@ -19,6 +19,7 @@ int dataLed = 13;
 Servo myservo;
 int pos = 0;
 int posMap;
+int prevPos;
 
 void flashLed(int pin, int times, int wait) {
 
@@ -64,34 +65,39 @@ void loop() {
       xbee.getResponse().getZBRxResponse(rx);
 
       if (rx.getOption() == ZB_PACKET_ACKNOWLEDGED) {
-        // the sender got an ACK
-        flashLed(statusLed, 10, 10);
+//        // the sender got an ACK
+//        flashLed(statusLed, 10, 10);
       } else {
-        // we got it (obviously) but sender didn't get an ACK
-        flashLed(errorLed, 2, 50);
+//        // we got it (obviously) but sender didn't get an ACK
+//        flashLed(errorLed, 2, 10);
       }
       // set dataLed PWM to value of the first byte in the data
       int servoVal = rx.getData(1) + (rx.getData(0) << 8);
-      Serial.println(servoVal);
-      myservo.write(map(servoVal, 0, 100, 0, 180));
-//      myservo.write(map(pos, 0, 100, 0, 180));
+      servoVal = 0.8 * servoVal + 0.2 * prevPos;
+      Serial.println(map(servoVal, 0, 100, 600, 2400));
+      if (servoVal != prevPos) {
+        myservo.writeMicroseconds(map(servoVal, 0, 100, 600, 2400));
+        prevPos = servoVal;
+        delay(10);
+      }
+
     } else if (xbee.getResponse().getApiId() == MODEM_STATUS_RESPONSE) {
       xbee.getResponse().getModemStatusResponse(msr);
       // the local XBee sends this response on certain events, like association/dissociation
 
       if (msr.getStatus() == ASSOCIATED) {
-        // yay this is great.  flash led
-        flashLed(statusLed, 10, 10);
-      } else if (msr.getStatus() == DISASSOCIATED) {
-        // this is awful.. flash led to show our discontent
+//        // yay this is great.  flash led
+//        flashLed(statusLed, 10, 10);
+//      } else if (msr.getStatus() == DISASSOCIATED) {
+//        // this is awful.. flash led to show our discontent
         flashLed(errorLed, 10, 10);
       } else {
-        // another status
-        flashLed(statusLed, 5, 10);
+//        // another status
+//        flashLed(statusLed, 5, 10);
       }
     } else {
-      // not something we were expecting
-      flashLed(errorLed, 1, 25);
+//      // not something we were expecting
+//      flashLed(errorLed, 1, 10);
     }
   } else if (xbee.getResponse().isError()) {
     //nss.print("Error reading packet.  Error code: ");
